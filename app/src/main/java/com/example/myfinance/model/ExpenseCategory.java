@@ -9,7 +9,9 @@ import java.util.UUID;
 public class ExpenseCategory {
     @DatabaseField(generatedId = true)
     private UUID id;
+    @DatabaseField
     private String name;
+    @DatabaseField
     private String description;
 
     public String getName() {

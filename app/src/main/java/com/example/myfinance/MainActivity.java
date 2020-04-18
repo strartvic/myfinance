@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private ExpenseCategoryService categoryService;
 
-    private RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     public void init() {
         this.databaseHelper = getHelper();
@@ -41,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        createAddButton();
+        createDeleteButton();
+        createRecylerView();
+    }
+
+    private void createAddButton() {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,15 +60,35 @@ public class MainActivity extends AppCompatActivity {
 
                 Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
+                        .map(ExpenseCategory::toString).collect(Collectors.toList()));
+                recyclerView.setAdapter(expenseCategoryAdapter);
             }
         });
+    }
 
+    private void createDeleteButton() {
+        Button deleteButton = findViewById(R.id.button_delete_all);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                categoryService.deleteAll();
+
+                ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
+                        .map(ExpenseCategory::toString).collect(Collectors.toList()));
+                recyclerView.setAdapter(expenseCategoryAdapter);
+            }
+        });
+    }
+
+    private void createRecylerView() {
         recyclerView = findViewById(R.id.categories);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
-                .map(category -> category.getId().toString()).collect(Collectors.toList()));
+                .map(ExpenseCategory::toString).collect(Collectors.toList()));
         recyclerView.setAdapter(expenseCategoryAdapter);
     }
 

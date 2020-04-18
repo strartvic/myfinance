@@ -43,4 +43,12 @@ public class ExpenseCategoryService {
             return Collections.emptyList();
         }
     }
+
+    public void deleteAll() {
+        try {
+            repository.delete(repository.queryForAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
