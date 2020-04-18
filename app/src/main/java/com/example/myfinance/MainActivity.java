@@ -7,8 +7,10 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfinance.adapter.ExpenseCategoryAdapter;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.model.ExpenseCategory;
 import com.example.myfinance.service.ExpenseCategoryService;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private ExpenseCategoryService categoryService;
+
+    private RecyclerView recyclerView;
 
     public void init() {
         this.databaseHelper = getHelper();
@@ -52,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = findViewById(R.id.categories);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
+                .map(category -> category.getId().toString()).collect(Collectors.toList()));
+        recyclerView.setAdapter(expenseCategoryAdapter);
     }
 
     @Override

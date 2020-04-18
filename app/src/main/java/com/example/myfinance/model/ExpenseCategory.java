@@ -28,6 +28,14 @@ public class ExpenseCategory {
         this.description = description;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "ExpenseCategory{" +
