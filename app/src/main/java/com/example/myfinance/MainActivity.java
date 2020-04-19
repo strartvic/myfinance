@@ -5,6 +5,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private ExpenseCategoryService categoryService;
 
     RecyclerView recyclerView;
+
+    private int rowCount = 3;
+    private TableRow currentRow;
 
     public void init() {
         this.databaseHelper = getHelper();
@@ -64,8 +69,40 @@ public class MainActivity extends AppCompatActivity {
                 ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
                         .map(ExpenseCategory::toString).collect(Collectors.toList()));
                 recyclerView.setAdapter(expenseCategoryAdapter);
+
+                TableLayout categoryTable = findViewById(R.id.category_table);
+                rowCount++;
+                if (rowCount > 3) {
+                    rowCount = 0;
+                    currentRow = createTableRow();
+                    categoryTable.addView(currentRow);
+                }
+
+                currentRow.addView(createButton("category1"));
             }
         });
+    }
+
+    private TableRow createTableRow() {
+        TableRow row = new TableRow(getApplicationContext());
+        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+        return row;
+    }
+
+    private Button createButton(String category) {
+        Button button = new Button(getApplicationContext());
+        button.setLayoutParams(new TableRow.LayoutParams(250, 250));
+        button.setText(category);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        return button;
     }
 
     private void createDeleteButton() {
