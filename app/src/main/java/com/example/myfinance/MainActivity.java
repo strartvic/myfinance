@@ -5,11 +5,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,13 +19,13 @@ import com.example.myfinance.adapter.ExpenseCategoryAdapter;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.model.ExpenseCategory;
 import com.example.myfinance.service.ExpenseCategoryService;
+import com.example.myfinance.view.CustomDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.stream.Collectors;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CustomDialog.CustomDialogListener {
 
     private DatabaseHelper databaseHelper;
     private ExpenseCategoryService categoryService;
@@ -57,28 +59,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExpenseCategory category = new ExpenseCategory();
-                category.setName("test");
-                category.setDescription("testDesc");
+//                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
 
-                category = categoryService.save(category);
-
-                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-                ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
-                        .map(ExpenseCategory::toString).collect(Collectors.toList()));
-                recyclerView.setAdapter(expenseCategoryAdapter);
-
-                TableLayout categoryTable = findViewById(R.id.category_table);
-                rowCount++;
-                if (rowCount > 3) {
-                    rowCount = 0;
-                    currentRow = createTableRow();
-                    categoryTable.addView(currentRow);
-                }
-
-                currentRow.addView(createButton("category1"));
+                DialogFragment dialog = new CustomDialog();
+                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
             }
         });
     }
@@ -166,4 +151,28 @@ public class MainActivity extends AppCompatActivity {
         }
         return databaseHelper;
     }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        ExpenseCategory category = new ExpenseCategory();
+        category.setName(((EditText) dialog.getDialog().getWindow().findViewById(R.id.username)).getText().toString());
+        category.setDescription(((EditText) dialog.getDialog().getWindow().findViewById(R.id.description)).getText().toString());
+
+        category = categoryService.save(category);
+
+        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
+                .map(ExpenseCategory::toString).collect(Collectors.toList()));
+        recyclerView.setAdapter(expenseCategoryAdapter);
+
+        TableLayout categoryTable = findViewById(R.id.category_table);
+        rowCount++;
+        if (rowCount > 3) {
+            rowCount = 0;
+            currentRow = createTableRow();
+            categoryTable.addView(currentRow);
+        }
+
+        currentRow.addView(createButton(category.getName()));
+    }
+
 }
