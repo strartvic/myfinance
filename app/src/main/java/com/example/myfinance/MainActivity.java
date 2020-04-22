@@ -1,6 +1,7 @@
 package com.example.myfinance;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        registerForContextMenu(toolbar);
 
         createAddButton();
         createDeleteButton();
@@ -134,6 +137,14 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, 4, 0, "22");
+        menu.add(0, 5, 0, "26");
+        menu.add(0, 6, 0, "30");
     }
 
     @Override
