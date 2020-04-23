@@ -1,4 +1,4 @@
-package com.example.myfinance;
+package com.example.myfinance.activity;
 
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -16,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfinance.MyFinanceApp;
+import com.example.myfinance.R;
 import com.example.myfinance.adapter.ExpenseCategoryAdapter;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.model.ExpenseCategory;
@@ -26,25 +28,27 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity implements CustomDialog.CustomDialogListener {
 
-    private DatabaseHelper databaseHelper;
-    private ExpenseCategoryService categoryService;
+    @Inject
+    DatabaseHelper databaseHelper;
+
+    @Inject
+    ExpenseCategoryService categoryService;
 
     RecyclerView recyclerView;
 
     private int rowCount = 3;
     private TableRow currentRow;
 
-    public void init() {
-        this.databaseHelper = getHelper();
-        this.categoryService = new ExpenseCategoryService(getHelper());
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
+
+        ((MyFinanceApp) getApplicationContext()).appComponent.inject(this);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -154,13 +158,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-    }
-
-    private DatabaseHelper getHelper() {
-        if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-        }
-        return databaseHelper;
     }
 
     @Override

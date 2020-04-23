@@ -1,23 +1,22 @@
 package com.example.myfinance.service;
 
-import com.example.myfinance.db.DatabaseHelper;
+import com.example.myfinance.dao.ExpenseCategoryRepository;
 import com.example.myfinance.model.ExpenseCategory;
-import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class ExpenseCategoryService {
-    private Dao<ExpenseCategory, UUID> repository;
+    private final ExpenseCategoryRepository repository;
 
-    public ExpenseCategoryService(DatabaseHelper helper) {
-        try {
-            repository = helper.getDao(ExpenseCategory.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Inject
+    public ExpenseCategoryService(ExpenseCategoryRepository repository) {
+        this.repository = repository;
     }
 
     public ExpenseCategory save(ExpenseCategory category) {
