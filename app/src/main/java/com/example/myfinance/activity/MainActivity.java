@@ -1,5 +1,7 @@
 package com.example.myfinance.activity;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -7,41 +9,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
 import com.example.myfinance.activity.fragment.EditDialogFragment;
-import com.example.myfinance.adapter.ExpenseCategoryAdapter;
 import com.example.myfinance.db.DatabaseHelper;
-import com.example.myfinance.model.ExpenseCategory;
-import com.example.myfinance.repository.ExpenseCategoryRepository;
+import com.example.myfinance.view.dto.ExpenseCategoryDto;
 import com.example.myfinance.view.model.ExpenseCategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements EditDialogFragment.CustomDialogListener {
 
     @Inject
-    ExpenseCategoryViewModel expenseCategoryViewModel;
+    ExpenseCategoryViewModel categoryViewModel;
 
     @Inject
     DatabaseHelper databaseHelper;
-
-    @Inject
-    ExpenseCategoryRepository categoryService;
-
 
     RecyclerView recyclerView;
 
@@ -63,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 
         createAddButton();
         createDeleteButton();
-        createRecylerView();
     }
 
     private void createAddButton() {
@@ -78,13 +69,6 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
                 dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
             }
         });
-    }
-
-    private TableRow createTableRow() {
-        TableRow row = new TableRow(getApplicationContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-        return row;
     }
 
     private Button createButton(String category) {
@@ -107,23 +91,9 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                categoryService.deleteAll();
-
-                ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
-                        .map(ExpenseCategory::toString).collect(Collectors.toList()));
-                recyclerView.setAdapter(expenseCategoryAdapter);
+                categoryViewModel.deleteAll();
             }
         });
-    }
-
-    private void createRecylerView() {
-        recyclerView = findViewById(R.id.categories);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(expenseCategoryViewModel.findAll().stream()
-                .map(ExpenseCategory::toString).collect(Collectors.toList()));
-        recyclerView.setAdapter(expenseCategoryAdapter);
     }
 
     @Override
@@ -167,25 +137,12 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        ExpenseCategory category = new ExpenseCategory();
+        ExpenseCategoryDto category = new ExpenseCategoryDto();
         category.setName(((EditText) dialog.getDialog().getWindow().findViewById(R.id.username)).getText().toString());
         category.setDescription(((EditText) dialog.getDialog().getWindow().findViewById(R.id.description)).getText().toString());
 
-        category = categoryService.save(category);
+        categoryViewModel.save(category);
 
-        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
-                .map(ExpenseCategory::toString).collect(Collectors.toList()));
-        recyclerView.setAdapter(expenseCategoryAdapter);
-
-        TableLayout categoryTable = findViewById(R.id.category_table);
-        rowCount++;
-        if (rowCount > 3) {
-            rowCount = 0;
-            currentRow = createTableRow();
-            categoryTable.addView(currentRow);
-        }
-
-        currentRow.addView(createButton(category.getName()));
     }
 
 }

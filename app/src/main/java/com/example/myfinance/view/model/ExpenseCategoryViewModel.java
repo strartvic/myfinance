@@ -30,14 +30,21 @@ public class ExpenseCategoryViewModel extends ViewModel {
     }
 
 
-    public List<ExpenseCategory> findAll() {
-        Type listType = new TypeToken<List<ExpenseCategory>>() {
+    public List<ExpenseCategoryDto> findAll() {
+        Type listType = new TypeToken<List<ExpenseCategoryDto>>() {
         }.getType();
 
         return mapper.map(repository.findAll(), listType);
     }
 
-    public ExpenseCategory save(ExpenseCategoryDto expenseCategoryDto) {
-        return mapper.map(expenseCategoryDto, ExpenseCategory.class);
+    public ExpenseCategoryDto save(ExpenseCategoryDto expenseCategoryDto) {
+        ExpenseCategory category = mapper.map(expenseCategoryDto, ExpenseCategory.class);
+        category = repository.save(category);
+
+        return mapper.map(category, ExpenseCategoryDto.class);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }
