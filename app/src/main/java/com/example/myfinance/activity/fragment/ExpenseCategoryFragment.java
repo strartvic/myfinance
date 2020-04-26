@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,10 +48,21 @@ public class ExpenseCategoryFragment extends Fragment {
         return table;
     }
 
+    @Override
+    public void onResume() {
+        refreshCategories();
+
+        super.onResume();
+    }
+
     private void refreshCategories() {
         table.removeAllViews();
 
         List<ExpenseCategoryDto> categories = categoryViewModel.findAll();
+
+        if (categories.isEmpty()) {
+            return;
+        }
 
         int rowCount = 0;
         TableRow row = null;
@@ -65,19 +77,24 @@ public class ExpenseCategoryFragment extends Fragment {
 
             rowCount++;
         }
+
+        for (int i = 0; i < MAX_COUNT_CATEGORIES_IN_ROW - rowCount; i++) {
+            createEmptyText(row);
+        }
     }
 
     private TableRow createTableRow() {
         TableRow row = new TableRow(getContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
         return row;
     }
 
-    private Button createCategoryButton(String category) {
+    private Button createCategoryButton(String categoryName) {
         Button button = new Button(getContext());
-        button.setLayoutParams(new TableRow.LayoutParams(250, 250));
-        button.setText(category);
+        button.setLayoutParams(new TableRow.LayoutParams(0, 250, 1.0f));
+        button.setSingleLine(true);
+        button.setText(categoryName);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,5 +105,12 @@ public class ExpenseCategoryFragment extends Fragment {
 
         return button;
     }
+
+    private void createEmptyText(TableRow row) {
+        TextView text = new TextView(getContext());
+        text.setLayoutParams(new TableRow.LayoutParams(0, 250, 1.0f));
+        row.addView(text);
+    }
+
 
 }

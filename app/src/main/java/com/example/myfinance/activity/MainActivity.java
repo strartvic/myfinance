@@ -1,7 +1,5 @@
 package com.example.myfinance.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -14,7 +12,7 @@ import android.widget.TableRow;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
@@ -35,11 +33,7 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
     @Inject
     DatabaseHelper databaseHelper;
 
-    RecyclerView recyclerView;
-
-    private int rowCount = 3;
-    private TableRow currentRow;
-
+    private Fragment categoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 
         createAddButton();
         createDeleteButton();
+
+        categoryFragment = getSupportFragmentManager().findFragmentById(R.id.category_fragment_id);
     }
 
     private void createAddButton() {
@@ -92,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
             @Override
             public void onClick(View view) {
                 categoryViewModel.deleteAll();
+                categoryFragment.onResume();
             }
         });
     }
@@ -143,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 
         categoryViewModel.save(category);
 
+        categoryFragment.onResume();
     }
 
 }
