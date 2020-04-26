@@ -1,12 +1,13 @@
 package com.example.myfinance.model;
 
+import com.example.myfinance.dao.impl.ExpenseDaoImpl;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 import java.util.UUID;
 
-@DatabaseTable
+@DatabaseTable(tableName = "expenses", daoClass = ExpenseDaoImpl.class)
 public class Expense {
     @DatabaseField(generatedId = true)
     private UUID id;
@@ -14,7 +15,7 @@ public class Expense {
     @DatabaseField(canBeNull = false)
     private double sum;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(columnName = "category_id", canBeNull = false, foreign = true)
     private ExpenseCategory category;
 
     @DatabaseField(canBeNull = false)

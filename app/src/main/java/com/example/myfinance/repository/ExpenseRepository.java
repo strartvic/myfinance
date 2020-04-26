@@ -1,7 +1,7 @@
 package com.example.myfinance.repository;
 
-import com.example.myfinance.dao.ExpenseCategoryDao;
-import com.example.myfinance.model.ExpenseCategory;
+import com.example.myfinance.dao.ExpenseDao;
+import com.example.myfinance.model.Expense;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -12,32 +12,32 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ExpenseCategoryRepository {
-    private final ExpenseCategoryDao repository;
+public class ExpenseRepository {
+    private final ExpenseDao dao;
 
     @Inject
-    public ExpenseCategoryRepository(ExpenseCategoryDao repository) {
-        this.repository = repository;
+    public ExpenseRepository(ExpenseDao dao) {
+        this.dao = dao;
     }
 
-    public ExpenseCategory save(ExpenseCategory category) {
+    public Expense save(Expense expense) {
         try {
-            category = repository.createIfNotExists(category);
+            expense = dao.createIfNotExists(expense);
         } catch (SQLException e) {
             try {
-                repository.createOrUpdate(category);
+                dao.createOrUpdate(expense);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 throw new android.database.SQLException("Something wrong with database");
             }
         }
 
-        return category;
+        return expense;
     }
 
-    public List<ExpenseCategory> findAll() {
+    public List<Expense> findByCategoryId(UUID categoryId) {
         try {
-            return repository.queryForAll();
+            return dao.findByCategoryId(categoryId);
         } catch (SQLException e) {
             e.printStackTrace();
             return Collections.emptyList();
@@ -46,18 +46,18 @@ public class ExpenseCategoryRepository {
 
     public void deleteAll() {
         try {
-            repository.delete(repository.queryForAll());
+            dao.delete(dao.queryForAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public ExpenseCategory findById(UUID id) {
+    public List<Expense> findAll() {
         try {
-            return repository.queryForId(id);
+            return dao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return Collections.emptyList();
         }
     }
 }

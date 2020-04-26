@@ -6,11 +6,11 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.UUID;
 
-@DatabaseTable(tableName = "expense_category", daoClass = ExpenseCategoryDaoImpl.class)
+@DatabaseTable(tableName = "expense_categories", daoClass = ExpenseCategoryDaoImpl.class)
 public class ExpenseCategory {
     @DatabaseField(generatedId = true)
     private UUID id;
-    @DatabaseField
+    @DatabaseField(unique = true)
     private String name;
     @DatabaseField
     private String description;
