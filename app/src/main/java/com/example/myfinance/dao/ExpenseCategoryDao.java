@@ -7,6 +7,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public interface ExpenseCategoryRepository extends Dao<ExpenseCategory, UUID> {
+public interface ExpenseCategoryDao extends Dao<ExpenseCategory, UUID> {
     List<ExpenseCategory> findByName(String name) throws SQLException;
 }

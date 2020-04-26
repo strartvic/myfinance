@@ -1,4 +1,4 @@
-package com.example.myfinance.view;
+package com.example.myfinance.activity.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.myfinance.R;
 
-public class CustomDialog extends DialogFragment {
+public class EditDialogFragment extends DialogFragment {
 
     public interface CustomDialogListener {
         public void onDialogPositiveClick(DialogFragment dialog);
@@ -26,18 +26,18 @@ public class CustomDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
+        // Pass null fragment the parent view because its going in the dialog layout
         builder.setView(inflater.inflate(R.layout.dialog, null))
                 // Add action buttons
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogPositiveClick(CustomDialog.this);
+                        mListener.onDialogPositiveClick(EditDialogFragment.this);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        CustomDialog.this.getDialog().cancel();
+                        EditDialogFragment.this.getDialog().cancel();
                     }
                 });
         return builder.create();

@@ -18,11 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
+import com.example.myfinance.activity.fragment.EditDialogFragment;
 import com.example.myfinance.adapter.ExpenseCategoryAdapter;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.model.ExpenseCategory;
-import com.example.myfinance.service.ExpenseCategoryService;
-import com.example.myfinance.view.CustomDialog;
+import com.example.myfinance.repository.ExpenseCategoryRepository;
+import com.example.myfinance.view.model.ExpenseCategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -30,13 +31,17 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements CustomDialog.CustomDialogListener {
+public class MainActivity extends AppCompatActivity implements EditDialogFragment.CustomDialogListener {
+
+    @Inject
+    ExpenseCategoryViewModel expenseCategoryViewModel;
 
     @Inject
     DatabaseHelper databaseHelper;
 
     @Inject
-    ExpenseCategoryService categoryService;
+    ExpenseCategoryRepository categoryService;
+
 
     RecyclerView recyclerView;
 
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
 //                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 
-                DialogFragment dialog = new CustomDialog();
+                DialogFragment dialog = new EditDialogFragment();
                 dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
             }
         });
@@ -116,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(categoryService.findAll().stream()
+        ExpenseCategoryAdapter expenseCategoryAdapter = new ExpenseCategoryAdapter(expenseCategoryViewModel.findAll().stream()
                 .map(ExpenseCategory::toString).collect(Collectors.toList()));
         recyclerView.setAdapter(expenseCategoryAdapter);
     }
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // fragment you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

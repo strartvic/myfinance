@@ -1,6 +1,6 @@
-package com.example.myfinance.service;
+package com.example.myfinance.repository;
 
-import com.example.myfinance.dao.ExpenseCategoryRepository;
+import com.example.myfinance.dao.ExpenseCategoryDao;
 import com.example.myfinance.model.ExpenseCategory;
 
 import java.sql.SQLException;
@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ExpenseCategoryService {
-    private final ExpenseCategoryRepository repository;
+public class ExpenseCategoryRepository {
+    private final ExpenseCategoryDao repository;
 
     @Inject
-    public ExpenseCategoryService(ExpenseCategoryRepository repository) {
+    public ExpenseCategoryRepository(ExpenseCategoryDao repository) {
         this.repository = repository;
     }
 
