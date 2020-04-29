@@ -1,8 +1,10 @@
 package com.example.myfinance.activity.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
+import com.example.myfinance.activity.ExpenseActivity;
 import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
 import com.example.myfinance.view.dto.ExpenseCategoryDto;
 import com.example.myfinance.view.dto.ExpenseDto;
 import com.example.myfinance.view.model.ExpenseCategoryViewModel;
+import com.example.myfinance.view.model.ExpenseViewModel;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -39,9 +43,12 @@ public class ExpenseCategoryFragment extends Fragment implements EditDialogFragm
 
     @Inject
     ExpenseCategoryViewModel categoryViewModel;
+    @Inject
+    ExpenseViewModel expenseViewModel;
 
     private TableLayout table;
     private Map<String, UUID> mapCategories = new HashMap<>();
+    private String currentCategoryName;
 
     @Override
     public void onAttach(Context context) {
@@ -112,11 +119,15 @@ public class ExpenseCategoryFragment extends Fragment implements EditDialogFragm
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentCategoryName = ((Button) view).getText().toString();
+
                 DialogFragment dialog = new EditDialogFragmentImpl();
                 dialog.setTargetFragment(ExpenseCategoryFragment.this, 1);
                 dialog.show(getFragmentManager(), "expense_dialog");
             }
         });
+
+        registerForContextMenu(button);
 
         return button;
     }
@@ -131,9 +142,19 @@ public class ExpenseCategoryFragment extends Fragment implements EditDialogFragm
     public void onDialogPositiveClick(EditDialogFragment dialog) {
         ExpenseDto expense = new ExpenseDto();
         expense.setDate(new Date());
-        expense.setCategoryId(mapCategories.get(dialog.getDescription()));
+        expense.setCategoryId(mapCategories.get(currentCategoryName));
         expense.setSum(Double.valueOf(dialog.getValue()));
+
+        expenseViewModel.save(expense);
 
         Log.i(TAG, "Expense created");
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        Intent intent = new Intent(getContext(), ExpenseActivity.class);
+        startActivity(intent);
+    }
+
 }

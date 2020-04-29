@@ -44,4 +44,11 @@ public class ExpenseDto {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "ExpenseDto{" +
+                ", categoryId=" + categoryId +
+                ", date=" + date +
+                '}';
+    }
 }
