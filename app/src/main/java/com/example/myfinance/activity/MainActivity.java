@@ -6,8 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
 import com.example.myfinance.activity.fragment.EditDialogFragment;
+import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.view.dto.ExpenseCategoryDto;
 import com.example.myfinance.view.model.ExpenseCategoryViewModel;
@@ -25,7 +24,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements EditDialogFragment.CustomDialogListener {
+public class MainActivity extends AppCompatActivity implements EditDialogFragmentImpl.DialogListener {
 
     @Inject
     ExpenseCategoryViewModel categoryViewModel;
@@ -61,25 +60,10 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 //                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 
-                DialogFragment dialog = new EditDialogFragment();
-                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                DialogFragment dialog = new EditDialogFragmentImpl();
+                dialog.show(getSupportFragmentManager(), "edit_category");
             }
         });
-    }
-
-    private Button createButton(String category) {
-        Button button = new Button(getApplicationContext());
-        button.setLayoutParams(new TableRow.LayoutParams(250, 250));
-        button.setText(category);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        return button;
     }
 
     private void createDeleteButton() {
@@ -102,9 +86,6 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // fragment you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -133,10 +114,10 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
+    public void onDialogPositiveClick(EditDialogFragment dialog) {
         ExpenseCategoryDto category = new ExpenseCategoryDto();
-        category.setName(((EditText) dialog.getDialog().getWindow().findViewById(R.id.username)).getText().toString());
-        category.setDescription(((EditText) dialog.getDialog().getWindow().findViewById(R.id.description)).getText().toString());
+        category.setName(dialog.getValue());
+        category.setDescription(dialog.getDescription());
 
         categoryViewModel.save(category);
 

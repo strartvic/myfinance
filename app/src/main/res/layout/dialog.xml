@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
@@ -9,24 +9,26 @@
         android:background="@color/colorPrimary"
         android:contentDescription="Создание категории"
         android:scaleType="center" />
+
     <EditText
-        android:id="@+id/username"
-        android:inputType="text"
+        android:id="@+id/value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="Имя категории" />
+        android:hint="Основное значение"
+        android:inputType="text" />
+
     <EditText
         android:id="@+id/description"
-        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
-        android:hint="Описание категории"/>
+        android:hint="Описание"
+        android:inputType="text" />
 </LinearLayout>

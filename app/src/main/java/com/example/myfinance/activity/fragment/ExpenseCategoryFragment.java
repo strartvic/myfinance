@@ -2,6 +2,7 @@ package com.example.myfinance.activity.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,27 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
+import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
 import com.example.myfinance.view.dto.ExpenseCategoryDto;
+import com.example.myfinance.view.dto.ExpenseDto;
 import com.example.myfinance.view.model.ExpenseCategoryViewModel;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
-public class ExpenseCategoryFragment extends Fragment {
+public class ExpenseCategoryFragment extends Fragment implements EditDialogFragmentImpl.DialogListener {
+
+    private static final String TAG = ExpenseCategoryFragment.class.getSimpleName();
 
     private static final int MAX_COUNT_CATEGORIES_IN_ROW = 4;
 
@@ -31,6 +41,7 @@ public class ExpenseCategoryFragment extends Fragment {
     ExpenseCategoryViewModel categoryViewModel;
 
     private TableLayout table;
+    private Map<String, UUID> mapCategories = new HashMap<>();
 
     @Override
     public void onAttach(Context context) {
@@ -75,6 +86,8 @@ public class ExpenseCategoryFragment extends Fragment {
 
             row.addView(createCategoryButton(category.getName()));
 
+            mapCategories.put(category.getName(), category.getId());
+
             rowCount++;
         }
 
@@ -99,7 +112,9 @@ public class ExpenseCategoryFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                DialogFragment dialog = new EditDialogFragmentImpl();
+                dialog.setTargetFragment(ExpenseCategoryFragment.this, 1);
+                dialog.show(getFragmentManager(), "expense_dialog");
             }
         });
 
@@ -112,5 +127,13 @@ public class ExpenseCategoryFragment extends Fragment {
         row.addView(text);
     }
 
+    @Override
+    public void onDialogPositiveClick(EditDialogFragment dialog) {
+        ExpenseDto expense = new ExpenseDto();
+        expense.setDate(new Date());
+        expense.setCategoryId(mapCategories.get(dialog.getDescription()));
+        expense.setSum(Double.valueOf(dialog.getValue()));
 
+        Log.i(TAG, "Expense created");
+    }
 }
