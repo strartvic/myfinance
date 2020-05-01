@@ -1,9 +1,10 @@
-package com.example.myfinance.view.dto;
+package com.example.myfinance.viewmodel.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-public class ExpenseDto {
+public class ExpenseDto implements Serializable {
     private UUID id;
 
     private double sum;

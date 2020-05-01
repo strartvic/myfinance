@@ -1,8 +1,9 @@
-package com.example.myfinance.view.dto;
+package com.example.myfinance.viewmodel.dto;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class ExpenseCategoryDto {
+public class ExpenseCategoryDto implements Serializable {
     private UUID id;
     private String name;
     private String description;

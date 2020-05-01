@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -24,6 +25,13 @@ public class EditDialogFragmentImpl extends DialogFragment implements EditDialog
     private DialogListener dialogListener;
     private String value;
     private String description;
+    private int inputType = InputType.TYPE_CLASS_TEXT;
+
+    public EditDialogFragmentImpl(Integer inputType) {
+        if (inputType != null) {
+            this.inputType = inputType;
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -31,6 +39,9 @@ public class EditDialogFragmentImpl extends DialogFragment implements EditDialog
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         view = inflater.inflate(R.layout.dialog, null);
+
+        EditText textValue = ((EditText) view.findViewById(R.id.value));
+        textValue.setInputType(inputType);
 
         builder.setView(view)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {

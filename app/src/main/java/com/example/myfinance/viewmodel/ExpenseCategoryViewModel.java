@@ -1,10 +1,10 @@
-package com.example.myfinance.view.model;
+package com.example.myfinance.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
 import com.example.myfinance.model.ExpenseCategory;
 import com.example.myfinance.repository.ExpenseCategoryRepository;
-import com.example.myfinance.view.dto.ExpenseCategoryDto;
+import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;

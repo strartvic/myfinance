@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.recyclerview.widget.RecyclerView>
+    <TableRow style="@style/HeaderRow">
+
+        <TextView
+            style="@style/HeaderText"
+            android:text="Сумма" />
+
+        <TextView
+            style="@style/HeaderText"
+            android:text="Описание" />
+
+        <TextView
+            style="@style/HeaderText"
+            android:text="Дата" />
+    </TableRow>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:id="@+id/expense_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow style="@style/BodyRow">
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="TextView" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="TextView" />
+
+            </TableRow>
+
+            <TableRow style="@style/BodyRow">
+
+                <TextView
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+                <TextView
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+                <TextView
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+            </TableRow>
+        </TableLayout>
+
+    </ScrollView>
+
+</TableLayout>

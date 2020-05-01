@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.ExpenseActivity">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/expense_fragment_id"
-        android:name="com.example.myfinance.activity.fragment.ExpenseFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

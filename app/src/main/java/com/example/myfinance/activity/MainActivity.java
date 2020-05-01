@@ -16,8 +16,8 @@ import com.example.myfinance.R;
 import com.example.myfinance.activity.fragment.EditDialogFragment;
 import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
 import com.example.myfinance.db.DatabaseHelper;
-import com.example.myfinance.view.dto.ExpenseCategoryDto;
-import com.example.myfinance.view.model.ExpenseCategoryViewModel;
+import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
+import com.example.myfinance.viewmodel.ExpenseCategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
 //                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 
-                DialogFragment dialog = new EditDialogFragmentImpl();
+                DialogFragment dialog = new EditDialogFragmentImpl(null);
                 dialog.show(getSupportFragmentManager(), "edit_category");
             }
         });
