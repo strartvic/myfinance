@@ -13,17 +13,18 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
-import com.example.myfinance.activity.fragment.EditDialogFragment;
-import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
+import com.example.myfinance.activity.fragment.dialog.CategoryDialogFragment;
 import com.example.myfinance.db.DatabaseHelper;
-import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
+import com.example.myfinance.exception.EntityFoundException;
 import com.example.myfinance.viewmodel.ExpenseCategoryViewModel;
+import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements EditDialogFragmentImpl.DialogListener {
+public class MainActivity extends AppCompatActivity implements CategoryDialogFragment.DialogListener {
 
     @Inject
     ExpenseCategoryViewModel categoryViewModel;
@@ -54,10 +55,7 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "category save: " + category.toString(), Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
-                DialogFragment dialog = new EditDialogFragmentImpl(null);
+                DialogFragment dialog = new CategoryDialogFragment(new ExpenseCategoryDto());
                 dialog.show(getSupportFragmentManager(), "edit_category");
             }
         });
@@ -103,12 +101,14 @@ public class MainActivity extends AppCompatActivity implements EditDialogFragmen
     }
 
     @Override
-    public void onDialogPositiveClick(EditDialogFragment dialog) {
-        ExpenseCategoryDto category = new ExpenseCategoryDto();
-        category.setName(dialog.getValue());
-        category.setDescription(dialog.getDescription());
-
-        categoryViewModel.save(category);
+    public void onDialogPositiveClick(CategoryDialogFragment dialog) {
+        try {
+            categoryViewModel.save(dialog.getCategory());
+        } catch (EntityFoundException e) {
+            Snackbar.make(categoryFragment.getView(), "Категория с таким именем уже сущесвует", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
 
         categoryFragment.onResume();
     }

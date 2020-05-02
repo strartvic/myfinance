@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorPrimary"
+        android:scaleType="center">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:text="Добавить расход" />
+    </TableRow>
+
+    <EditText
+        android:id="@+id/sum"
+        style="@style/Dialog"
+        android:hint="Сумма" />
+
+    <EditText
+        android:id="@+id/description"
+        style="@style/Dialog"
+        android:hint="Описание расхода"
+        android:inputType="text" />
+
+</LinearLayout>

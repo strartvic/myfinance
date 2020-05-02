@@ -13,6 +13,8 @@ public class ExpenseDto implements Serializable {
 
     private Date date;
 
+    private String description;
+
     public UUID getId() {
         return id;
     }
@@ -43,6 +45,14 @@ public class ExpenseDto implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

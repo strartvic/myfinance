@@ -3,9 +3,9 @@ package com.example.myfinance.activity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
@@ -15,27 +15,33 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
 import com.example.myfinance.activity.ExpenseActivity;
-import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
+import com.example.myfinance.activity.fragment.dialog.CategoryDialogFragment;
+import com.example.myfinance.activity.fragment.dialog.ExpenseDialogFragment;
 import com.example.myfinance.activity.view.CategoryView;
 import com.example.myfinance.viewmodel.ExpenseCategoryViewModel;
 import com.example.myfinance.viewmodel.ExpenseViewModel;
 import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
 import com.example.myfinance.viewmodel.dto.ExpenseDto;
 
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
-public class ExpenseCategoryFragment extends Fragment implements EditDialogFragmentImpl.DialogListener {
+public class ExpenseCategoryFragment extends Fragment implements ExpenseDialogFragment.DialogListener {
 
     private static final String TAG = ExpenseCategoryFragment.class.getSimpleName();
+
+    private static final String MENU_EXPENSE = "Расходы";
+
+    private static final String MENU_EDIT_CATEGORY = "Редактировать";
+
+    private static final String MENU_DELETE = "Удалить";
 
     private static final int MAX_COUNT_CATEGORIES_IN_ROW = 4;
 
@@ -115,10 +121,7 @@ public class ExpenseCategoryFragment extends Fragment implements EditDialogFragm
             public void onClick(View view) {
                 currentCategory = ((CategoryView) view).getExpenseCategory();
 
-                DialogFragment dialog = new EditDialogFragmentImpl(InputType.TYPE_CLASS_NUMBER |
-                        InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                dialog.setTargetFragment(ExpenseCategoryFragment.this, 1);
-                dialog.show(getFragmentManager(), "expense_dialog");
+                createExpense(currentCategory.getId());
             }
         });
 
@@ -134,26 +137,68 @@ public class ExpenseCategoryFragment extends Fragment implements EditDialogFragm
     }
 
     @Override
-    public void onDialogPositiveClick(EditDialogFragment dialog) {
-        ExpenseDto expense = new ExpenseDto();
-        expense.setDate(new Date());
-        expense.setCategoryId(currentCategory.getId());
-        expense.setSum(Double.valueOf(dialog.getValue()));
-
-        expenseViewModel.save(expense);
+    public void onDialogPositiveClick(ExpenseDialogFragment dialog) {
+        expenseViewModel.save(dialog.getExpense());
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
+        currentCategory = ((CategoryView) v).getExpenseCategory();
+
+        menu.add(MENU_EXPENSE);
+        menu.add(MENU_EDIT_CATEGORY);
+        menu.add(MENU_DELETE);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        String title = item.getTitle().toString();
+
+        if (MENU_EXPENSE.equals(title)) {
+            showExpenseActivityForCurrentCategory();
+        }
+
+        if (MENU_EDIT_CATEGORY.equals(title)) {
+            editCurrentCategory();
+        }
+
+        if (MENU_DELETE.equals(title)) {
+            deleteCurrentCategory();
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void editCurrentCategory() {
+        CategoryDialogFragment dialog = new CategoryDialogFragment(currentCategory);
+
+        dialog.show(getFragmentManager(), "category_dialog");
+    }
+
+    private void createExpense(UUID categoryId) {
+        ExpenseDto expense = new ExpenseDto();
+        expense.setCategoryId(categoryId);
+
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment(expense);
+        dialog.setTargetFragment(ExpenseCategoryFragment.this, 1);
+        dialog.show(getFragmentManager(), "expense_dialog");
+    }
+
+    private void showExpenseActivityForCurrentCategory() {
         Intent intent = new Intent(getContext(), ExpenseActivity.class);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ExpenseActivity.EXPENSE_CATEGORY_BUNDLE, ((CategoryView) v).getExpenseCategory());
+        bundle.putSerializable(ExpenseActivity.EXPENSE_CATEGORY_BUNDLE, currentCategory);
 
         intent.putExtras(bundle);
 
         startActivity(intent);
     }
 
+    private void deleteCurrentCategory() {
+        categoryViewModel.delete(currentCategory.getId());
+
+        refresh();
+    }
 }

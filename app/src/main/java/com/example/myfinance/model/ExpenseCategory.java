@@ -10,7 +10,7 @@ import java.util.UUID;
 public class ExpenseCategory {
     @DatabaseField(generatedId = true)
     private UUID id;
-    @DatabaseField(unique = true)
+    @DatabaseField(canBeNull = false, unique = true)
     private String name;
     @DatabaseField
     private String description;

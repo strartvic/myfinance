@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myfinance.MyFinanceApp;
 import com.example.myfinance.R;
-import com.example.myfinance.activity.fragment.impl.EditDialogFragmentImpl;
+import com.example.myfinance.activity.fragment.dialog.ExpenseDialogFragment;
 import com.example.myfinance.viewmodel.ExpenseViewModel;
 import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
 import com.example.myfinance.viewmodel.dto.ExpenseDto;
@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ExpenseFragment extends Fragment implements EditDialogFragmentImpl.DialogListener {
+public class ExpenseFragment extends Fragment implements ExpenseDialogFragment.DialogListener {
 
     private static final String TAG = ExpenseFragment.class.getSimpleName();
 
@@ -57,7 +57,7 @@ public class ExpenseFragment extends Fragment implements EditDialogFragmentImpl.
     }
 
     @Override
-    public void onDialogPositiveClick(EditDialogFragment dialog) {
+    public void onDialogPositiveClick(ExpenseDialogFragment dialog) {
     }
 
     private void refresh() {
@@ -74,7 +74,7 @@ public class ExpenseFragment extends Fragment implements EditDialogFragmentImpl.
             TableRow row = createTableRow();
 
             row.addView(createText(String.valueOf(expense.getSum())));
-            row.addView(createText("description"));
+            row.addView(createText(expense.getDescription()));
             row.addView(createText(expense.getDate().toString()));
 
             table.addView(row);

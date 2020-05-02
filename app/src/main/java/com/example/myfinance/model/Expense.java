@@ -21,6 +21,9 @@ public class Expense {
     @DatabaseField(canBeNull = false)
     private Date date;
 
+    @DatabaseField
+    private String description;
+
     public UUID getId() {
         return id;
     }
@@ -53,4 +56,22 @@ public class Expense {
         this.date = date;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "id=" + id +
+                ", sum=" + sum +
+                (category == null ? "" : ", category=" + category.toString()) +
+                ", date=" + date +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

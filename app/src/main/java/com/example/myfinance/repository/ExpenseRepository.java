@@ -1,10 +1,14 @@
 package com.example.myfinance.repository;
 
+import android.util.Log;
+
 import com.example.myfinance.dao.ExpenseDao;
 import com.example.myfinance.model.Expense;
+import com.example.myfinance.model.ExpenseCategory;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +17,9 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ExpenseRepository {
+
+    private final String TAG = ExpenseCategory.class.getSimpleName();
+
     private final ExpenseDao dao;
 
     @Inject
@@ -22,13 +29,19 @@ public class ExpenseRepository {
 
     public Expense save(Expense expense) {
         try {
+            if (expense.getDate() == null) {
+                expense.setDate(new Date());
+            }
+
             expense = dao.createIfNotExists(expense);
         } catch (SQLException e) {
             try {
                 dao.createOrUpdate(expense);
             } catch (SQLException ex) {
-                ex.printStackTrace();
-                throw new android.database.SQLException("Something wrong with database");
+                String message = String.format("Expense=%s don't save", expense.toString());
+
+                Log.e(TAG, message, e);
+                throw new android.database.SQLException(message);
             }
         }
 

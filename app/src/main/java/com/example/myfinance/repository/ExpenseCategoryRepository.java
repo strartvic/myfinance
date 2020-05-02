@@ -1,6 +1,10 @@
 package com.example.myfinance.repository;
 
+import android.util.Log;
+
 import com.example.myfinance.dao.ExpenseCategoryDao;
+import com.example.myfinance.exception.EntityFoundException;
+import com.example.myfinance.exception.EntityNotFoundException;
 import com.example.myfinance.model.ExpenseCategory;
 
 import java.sql.SQLException;
@@ -13,6 +17,9 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ExpenseCategoryRepository {
+
+    private final String TAG = ExpenseCategoryRepository.class.getSimpleName();
+
     private final ExpenseCategoryDao repository;
 
     @Inject
@@ -22,14 +29,34 @@ public class ExpenseCategoryRepository {
 
     public ExpenseCategory save(ExpenseCategory category) {
         try {
+            if (repository.findByName(category.getName()) != null) {
+                throw new EntityFoundException(String.format("Category with name =%s existed", category.getName()));
+            }
+
             category = repository.createIfNotExists(category);
         } catch (SQLException e) {
-            try {
-                repository.createOrUpdate(category);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                throw new android.database.SQLException("Something wrong with database");
+            String message = String.format("Category=%s don't save", category.toString());
+
+            Log.e(TAG, message, e);
+            throw new android.database.SQLException(message);
+        }
+
+        return category;
+    }
+
+    public ExpenseCategory update(ExpenseCategory category) {
+        try {
+            if (category.getId() == null || repository.queryForId(category.getId()) == null) {
+                throw new EntityNotFoundException(String.format("Category with id =%s not existed", category.getId()));
             }
+
+            repository.update(category);
+
+        } catch (SQLException e) {
+            String message = String.format("Category=%s don't update", category.toString());
+
+            Log.e(TAG, message, e);
+            throw new android.database.SQLException(message);
         }
 
         return category;
@@ -49,6 +76,17 @@ public class ExpenseCategoryRepository {
             repository.delete(repository.queryForAll());
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void delete(UUID id) {
+        try {
+            repository.deleteById(id);
+        } catch (SQLException e) {
+            String message = String.format("Category with id=%s don't deleted", id);
+
+            Log.e(TAG, message, e);
+            throw new EntityNotFoundException(message);
         }
     }
 

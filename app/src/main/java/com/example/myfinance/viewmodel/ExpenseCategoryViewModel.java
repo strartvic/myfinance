@@ -11,6 +11,7 @@ import org.modelmapper.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,12 +40,29 @@ public class ExpenseCategoryViewModel extends ViewModel {
 
     public ExpenseCategoryDto save(ExpenseCategoryDto expenseCategoryDto) {
         ExpenseCategory category = mapper.map(expenseCategoryDto, ExpenseCategory.class);
-        category = repository.save(category);
+
+        if (expenseCategoryDto.getId() == null) {
+            category = repository.save(category);
+        } else {
+            category = repository.update(category);
+        }
 
         return mapper.map(category, ExpenseCategoryDto.class);
     }
 
     public void deleteAll() {
         repository.deleteAll();
+    }
+
+    public void delete(UUID id) {
+        repository.delete(id);
+    }
+
+    public ExpenseCategoryDto update(ExpenseCategoryDto dto) {
+        ExpenseCategory category = mapper.map(dto, ExpenseCategory.class);
+
+        category = repository.update(category);
+
+        return mapper.map(category, ExpenseCategoryDto.class);
     }
 }

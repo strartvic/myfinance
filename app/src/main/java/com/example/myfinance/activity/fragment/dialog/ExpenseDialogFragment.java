@@ -1,36 +1,37 @@
-package com.example.myfinance.activity.fragment.impl;
+package com.example.myfinance.activity.fragment.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.myfinance.R;
-import com.example.myfinance.activity.fragment.EditDialogFragment;
+import com.example.myfinance.viewmodel.dto.ExpenseDto;
 
-public class EditDialogFragmentImpl extends DialogFragment implements EditDialogFragment {
+public class ExpenseDialogFragment extends DialogFragment {
 
     public interface DialogListener {
-        public void onDialogPositiveClick(EditDialogFragment dialog);
+        public void onDialogPositiveClick(ExpenseDialogFragment dialog);
     }
 
-    private View view;
-    private DialogListener dialogListener;
-    private String value;
-    private String description;
-    private int inputType = InputType.TYPE_CLASS_TEXT;
+    private View mainView;
+    private TextView expenseSumView;
+    private TextView expenseDescView;
 
-    public EditDialogFragmentImpl(Integer inputType) {
-        if (inputType != null) {
-            this.inputType = inputType;
-        }
+    private DialogListener dialogListener;
+
+    private ExpenseDto expense;
+
+    public ExpenseDialogFragment(@NonNull ExpenseDto expense) {
+        this.expense = expense;
     }
 
     @Override
@@ -38,27 +39,34 @@ public class EditDialogFragmentImpl extends DialogFragment implements EditDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        view = inflater.inflate(R.layout.dialog, null);
+        mainView = inflater.inflate(R.layout.expense_dialog, null);
 
-        EditText textValue = ((EditText) view.findViewById(R.id.value));
-        textValue.setInputType(inputType);
+        updateViews();
 
-        builder.setView(view)
+        builder.setView(mainView)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        value = ((EditText) view.findViewById(R.id.value)).getText().toString();
-                        description = ((EditText) view.findViewById(R.id.description)).getText().toString();
+                        expense.setSum(Double.valueOf(expenseSumView.getText().toString()));
+                        expense.setDescription(expenseDescView.getText().toString());
 
-                        dialogListener.onDialogPositiveClick(EditDialogFragmentImpl.this);
+                        dialogListener.onDialogPositiveClick(ExpenseDialogFragment.this);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        EditDialogFragmentImpl.this.getDialog().cancel();
+                        ExpenseDialogFragment.this.getDialog().cancel();
                     }
                 });
         return builder.create();
+    }
+
+    private void updateViews() {
+        expenseSumView = (EditText) mainView.findViewById(R.id.sum);
+        expenseSumView.setText(String.valueOf(expense.getSum()));
+
+        expenseDescView = ((EditText) mainView.findViewById(R.id.description));
+        expenseDescView.setText(expense.getDescription());
     }
 
     @Override
@@ -77,13 +85,7 @@ public class EditDialogFragmentImpl extends DialogFragment implements EditDialog
         }
     }
 
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
+    public ExpenseDto getExpense() {
+        return expense;
     }
 }

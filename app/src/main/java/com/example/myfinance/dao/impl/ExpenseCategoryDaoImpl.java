@@ -16,7 +16,13 @@ public class ExpenseCategoryDaoImpl extends BaseDaoImpl<ExpenseCategory, UUID> i
     }
 
     @Override
-    public List<ExpenseCategory> findByName(String name) throws SQLException {
-        return super.queryForEq("name", name);
+    public ExpenseCategory findByName(String name) throws SQLException {
+        List<ExpenseCategory> query = super.queryForEq("name", name);
+
+        if (query.isEmpty()) {
+            return null;
+        }
+
+        return query.get(0);
     }
 }
