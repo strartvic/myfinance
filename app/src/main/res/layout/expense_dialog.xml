@@ -9,22 +9,21 @@
         android:background="@color/colorPrimary"
         android:scaleType="center">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:singleLine="true"
+        <TextView
+            style="@style/HeaderTextDialog"
             android:text="Добавить расход" />
     </TableRow>
 
     <EditText
         android:id="@+id/sum"
-        style="@style/Dialog"
-        android:hint="Сумма" />
+        style="@style/InputEditText"
+        android:hint="Сумма"
+        android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/description"
-        style="@style/Dialog"
-        android:hint="Описание расхода"
+        style="@style/InputEditText"
+        android:hint="Описание расход"
         android:inputType="text" />
 
 </LinearLayout>

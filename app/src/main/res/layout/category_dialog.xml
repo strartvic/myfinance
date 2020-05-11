@@ -9,22 +9,19 @@
         android:background="@color/colorPrimary"
         android:scaleType="center">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:singleLine="true"
+        <TextView
+            style="@style/HeaderTextDialog"
             android:text="Создание категории" />
     </TableRow>
 
     <EditText
         android:id="@+id/name"
-        style="@style/Dialog"
+        style="@style/InputEditText"
         android:hint="Название категории" />
 
     <EditText
         android:id="@+id/description"
-        style="@style/Dialog"
-        android:hint="Описание категории"
-        android:inputType="text" />
+        style="@style/InputEditText"
+        android:hint="Описание категории" />
 
 </LinearLayout>

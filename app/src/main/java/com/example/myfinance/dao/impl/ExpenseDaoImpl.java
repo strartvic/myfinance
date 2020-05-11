@@ -17,6 +17,10 @@ public class ExpenseDaoImpl extends BaseDaoImpl<Expense, UUID> implements Expens
 
     @Override
     public List<Expense> findByCategoryId(UUID categoryId) throws SQLException {
-        return super.queryForEq("category_id", categoryId);
+        return queryBuilder()
+                .orderBy("date", false)
+                .where()
+                .eq("category_id", categoryId)
+                .query();
     }
 }
