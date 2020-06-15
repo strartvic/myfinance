@@ -7,7 +7,7 @@ import java.util.UUID;
 public class ExpenseDto implements Serializable {
     private UUID id;
 
-    private double sum;
+    private Double sum;
 
     private UUID categoryId;
 
@@ -23,11 +23,11 @@ public class ExpenseDto implements Serializable {
         this.id = id;
     }
 
-    public double getSum() {
+    public Double getSum() {
         return sum;
     }
 
-    public void setSum(double sum) {
+    public void setSum(Double sum) {
         this.sum = sum;
     }
 
@@ -61,5 +61,9 @@ public class ExpenseDto implements Serializable {
                 ", categoryId=" + categoryId +
                 ", date=" + date +
                 '}';
+    }
+
+    public String getStringSum() {
+        return sum == null ? "" : sum.toString();
     }
 }

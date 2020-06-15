@@ -11,19 +11,19 @@
 
         <TextView
             style="@style/HeaderTextDialog"
-            android:text="Добавить расход" />
+            android:text="Опять потратил :(" />
     </TableRow>
 
     <EditText
         android:id="@+id/sum"
         style="@style/InputEditText"
-        android:hint="Сумма"
+        android:hint="А сколько?!"
         android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/description"
         style="@style/InputEditText"
-        android:hint="Описание расход"
+        android:hint="И на что же?!"
         android:inputType="text" />
 
 </LinearLayout>

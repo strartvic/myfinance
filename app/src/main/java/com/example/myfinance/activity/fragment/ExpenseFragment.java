@@ -73,7 +73,7 @@ public class ExpenseFragment extends Fragment implements ExpenseDialogFragment.D
         for (ExpenseDto expense : expenses) {
             TableRow row = createTableRow();
 
-            row.addView(createText(String.valueOf(expense.getSum())));
+            row.addView(createText(expense.getStringSum()));
             row.addView(createText(expense.getDescription()));
             row.addView(createText(expense.getDate().toString()));
 

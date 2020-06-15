@@ -16,6 +16,7 @@ import com.example.myfinance.R;
 import com.example.myfinance.activity.fragment.dialog.CategoryDialogFragment;
 import com.example.myfinance.db.DatabaseHelper;
 import com.example.myfinance.exception.EntityFoundException;
+import com.example.myfinance.notification.NotificationService;
 import com.example.myfinance.viewmodel.ExpenseCategoryViewModel;
 import com.example.myfinance.viewmodel.dto.ExpenseCategoryDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogFra
     @Inject
     DatabaseHelper databaseHelper;
 
-    private Fragment categoryFragment;
+    @Inject
+    NotificationService notificationService;
+
+    Fragment categoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +107,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialogFra
     @Override
     public void onDialogPositiveClick(CategoryDialogFragment dialog) {
         try {
-            categoryViewModel.save(dialog.getCategory());
+            ExpenseCategoryDto category = categoryViewModel.save(dialog.getCategory());
+
+            notificationService.createNotification("Создана категория", category.getName());
         } catch (EntityFoundException e) {
             Snackbar.make(categoryFragment.getView(), "Категория с таким именем уже сущесвует", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();

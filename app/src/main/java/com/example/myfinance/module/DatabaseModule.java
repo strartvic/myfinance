@@ -9,8 +9,6 @@ import com.example.myfinance.model.Expense;
 import com.example.myfinance.model.ExpenseCategory;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import org.modelmapper.ModelMapper;
-
 import java.sql.SQLException;
 
 import javax.inject.Singleton;
@@ -19,10 +17,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MyFinanceModule {
+public class DatabaseModule {
     private final Context context;
 
-    public MyFinanceModule(Context context) {
+    public DatabaseModule(Context context) {
         this.context = context;
     }
 
@@ -52,11 +50,5 @@ public class MyFinanceModule {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @Singleton
-    @Provides
-    public ModelMapper provideModelMapper() {
-        return new ModelMapper();
     }
 }

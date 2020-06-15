@@ -47,6 +47,11 @@ public class ExpenseDialogFragment extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        //todo провести нормальную валидацию
+                        if (expenseSumView.getText().length() == 0) {
+                            return;
+                        }
+
                         expense.setSum(Double.valueOf(expenseSumView.getText().toString()));
                         expense.setDescription(expenseDescView.getText().toString());
 
@@ -63,7 +68,7 @@ public class ExpenseDialogFragment extends DialogFragment {
 
     private void updateViews() {
         expenseSumView = (EditText) mainView.findViewById(R.id.sum);
-        expenseSumView.setText(String.valueOf(expense.getSum()));
+        expenseSumView.setText(expense.getStringSum());
 
         expenseDescView = ((EditText) mainView.findViewById(R.id.description));
         expenseDescView.setText(expense.getDescription());

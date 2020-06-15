@@ -2,10 +2,14 @@ package com.example.myfinance;
 
 import android.app.Application;
 
-import com.example.myfinance.module.MyFinanceModule;
+import com.example.myfinance.module.DatabaseModule;
+import com.example.myfinance.module.MapperModule;
+import com.example.myfinance.module.ServiceModule;
 
 public class MyFinanceApp extends Application {
     public ApplicationComponent appComponent = DaggerApplicationComponent.builder()
-            .myFinanceModule(new MyFinanceModule(this))
+            .databaseModule(new DatabaseModule(this))
+            .mapperModule(new MapperModule(this))
+            .serviceModule(new ServiceModule(this))
             .build();
 }
